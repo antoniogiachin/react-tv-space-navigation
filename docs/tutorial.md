@@ -52,12 +52,8 @@ We also define `SupportedKeys` as an output value for all platforms, and we map 
 
 We decline this interface on multiple platforms.
 
-- web: quite straightforward
-- android: we install `react-native-keyevent` (check out the install docs). Rest is straightforward.
-- ios: we use the `react-native-tvos` API to remap the iOS keys. We do not handle the gestures yet.
-
-You can improve this to handle gestures on tvOS.
-We are considering long presses as well, but this will need an additional `onLongSelect` props on `SpatialNavigationNode`.
+- web: quite straightforward, uses `window.addEventListener('keydown', ...)`.
+- native (Android TV + tvOS): both use `TVEventHandler` from `react-native-tvos` to remap remote control keys, and `BackHandler` for the back/menu button. See `RemoteControlManager.native.ts` in the example.
 
 ### Set-up a spatial navigation root
 

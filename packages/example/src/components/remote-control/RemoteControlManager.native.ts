@@ -1,14 +1,20 @@
 import { SupportedKeys } from './SupportedKeys';
-import { HWEvent, TVEventHandler } from 'react-native';
+import { HWEvent, TVEventHandler, BackHandler } from 'react-native';
 import { RemoteControlManagerInterface } from './RemoteControlManager.interface';
 import CustomEventEmitter from './CustomEventEmitter';
 
 class RemoteControlManager implements RemoteControlManagerInterface {
   constructor() {
     TVEventHandler.addListener(this.handleKeyDown);
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
 
   private eventEmitter = new CustomEventEmitter<{ keyDown: SupportedKeys }>();
+
+  private handleBackPress = () => {
+    this.eventEmitter.emit('keyDown', SupportedKeys.Back);
+    return false;
+  };
 
   private handleKeyDown = (evt: HWEvent) => {
     if (!evt) return;
@@ -26,7 +32,6 @@ class RemoteControlManager implements RemoteControlManagerInterface {
       return;
     }
 
-    // We only want to handle keydown for long select to avoid triggering the event twice
     if (mappedKey === SupportedKeys.LongEnter && evt.eventKeyAction === 1) {
       return;
     }

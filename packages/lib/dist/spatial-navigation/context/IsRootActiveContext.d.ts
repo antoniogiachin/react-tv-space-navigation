@@ -1,0 +1,2 @@
+export declare const IsRootActiveContext: import("react").Context<boolean>;
+export declare const useIsRootActive: () => boolean;

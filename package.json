@@ -3,6 +3,7 @@
   "workspaces": [
     "packages/*"
   ],
+  "main": "packages/lib/src/index.ts",
   "private": true,
   "packageManager": "yarn@3.5.1",
   "devDependencies": {

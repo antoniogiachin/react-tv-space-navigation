@@ -45,6 +45,7 @@
     "@bam.tech/lrud": "^8.0.2",
     "@react-native-tvos/config-tv": "^0.0.4",
     "@react-navigation/bottom-tabs": "^6.5.11",
+    "lodash": "^4.17.21",
     "lodash.uniqueid": "^4.0.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",

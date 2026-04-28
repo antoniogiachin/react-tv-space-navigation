@@ -3,7 +3,7 @@
   "workspaces": [
     "packages/*"
   ],
-  "main": "packages/lib/dist/index.js",
+  "main": "dist/index.js",
   "private": true,
   "packageManager": "yarn@3.5.1",
   "devDependencies": {

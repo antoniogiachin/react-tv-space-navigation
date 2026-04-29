@@ -68,7 +68,7 @@ const useRegisterGridRowVirtualNodes = ({ numberOfColumns }: { numberOfColumns: 
 
   const unregisterNthVirtualNode = useCallback(
     (index: number) => {
-      return spatialNavigator.unregisterNode(getNthVirtualNodeID(index));
+      return spatialNavigator.unregisterNode(getNthVirtualNodeID(index), { forceRefocus: false });
     },
     [spatialNavigator, getNthVirtualNodeID],
   );

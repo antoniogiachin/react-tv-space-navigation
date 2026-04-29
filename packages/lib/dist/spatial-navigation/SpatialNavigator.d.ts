@@ -13,7 +13,9 @@ export default class SpatialNavigator {
     private registerMap;
     registerNode(...params: Parameters<Lrud['registerNode']>): void;
     private focusRecoveryScheduled;
-    unregisterNode(nodeId: string): void;
+    unregisterNode(nodeId: string, { forceRefocus }?: {
+        forceRefocus?: boolean;
+    }): void;
     handleKeyDown(direction: Direction | null): Promise<void>;
     hasOneNodeFocused(): boolean;
     /**

@@ -101,7 +101,8 @@ const useRegisterVirtualNodes = <T,>({
   );
 
   const unregisterNthVirtualNode = useCallback(
-    (index: number) => spatialNavigator.unregisterNode(getNthVirtualNodeID(index)),
+    (index: number) =>
+      spatialNavigator.unregisterNode(getNthVirtualNodeID(index), { forceRefocus: false }),
     [getNthVirtualNodeID, spatialNavigator],
   );
 

@@ -58,10 +58,10 @@ export default class SpatialNavigator {
 
   private focusRecoveryScheduled = false;
 
-  public unregisterNode(nodeId: string) {
-    this.lrud.unregisterNode(nodeId, { forceRefocus: false });
+  public unregisterNode(nodeId: string, { forceRefocus = true }: { forceRefocus?: boolean } = {}) {
+    this.lrud.unregisterNode(nodeId, { forceRefocus });
 
-    if (!this.lrud.currentFocusNode && !this.focusRecoveryScheduled) {
+    if (!forceRefocus && !this.lrud.currentFocusNode && !this.focusRecoveryScheduled) {
       this.focusRecoveryScheduled = true;
       queueMicrotask(() => {
         this.focusRecoveryScheduled = false;

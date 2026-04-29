@@ -916,11 +916,13 @@ class SpatialNavigator {
       console.error(e);
     }
   }
-  unregisterNode(nodeId) {
+  unregisterNode(nodeId, {
+    forceRefocus = true
+  } = {}) {
     this.lrud.unregisterNode(nodeId, {
-      forceRefocus: false
+      forceRefocus
     });
-    if (!this.lrud.currentFocusNode && !this.focusRecoveryScheduled) {
+    if (!forceRefocus && !this.lrud.currentFocusNode && !this.focusRecoveryScheduled) {
       this.focusRecoveryScheduled = true;
       queueMicrotask(() => {
         this.focusRecoveryScheduled = false;
@@ -3304,7 +3306,9 @@ const useRegisterVirtualNodes = ({
       isFocusable: false
     });
   }, [getNthVirtualNodeID, parentId, spatialNavigator, nodeOrientation]);
-  const unregisterNthVirtualNode = (0, react_1.useCallback)(index => spatialNavigator.unregisterNode(getNthVirtualNodeID(index)), [getNthVirtualNodeID, spatialNavigator]);
+  const unregisterNthVirtualNode = (0, react_1.useCallback)(index => spatialNavigator.unregisterNode(getNthVirtualNodeID(index), {
+    forceRefocus: false
+  }), [getNthVirtualNodeID, spatialNavigator]);
   useRegisterInitialAndUnregisterFinalVirtualNodes({
     allItems,
     parentId,
@@ -4367,7 +4371,9 @@ const useRegisterGridRowVirtualNodes = ({
     });
   }, [spatialNavigator, parentId, getNthVirtualNodeID]);
   const unregisterNthVirtualNode = (0, react_1.useCallback)(index => {
-    return spatialNavigator.unregisterNode(getNthVirtualNodeID(index));
+    return spatialNavigator.unregisterNode(getNthVirtualNodeID(index), {
+      forceRefocus: false
+    });
   }, [spatialNavigator, getNthVirtualNodeID]);
   (0, react_1.useEffect)(() => {
     (0, range_1.default)(numberOfColumns).forEach(i => registerNthVirtualNode(i));

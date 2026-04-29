@@ -30,7 +30,13 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.0.0",
     "html-webpack-plugin": "^5.5.3",
+    "@react-native-tvos/config-tv": "^0.0.4",
+    "@react-navigation/bottom-tabs": "^6.5.11",
     "metro-react-native-babel-preset": "^0.76.7",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native-modal": "^13.0.1",
+    "react-native-web": "^0.20.0",
     "patch-package": "^8.0.0",
     "prettier": "^2.8.8",
     "react-test-renderer": "19.1.0",
@@ -43,14 +49,17 @@
   },
   "dependencies": {
     "@bam.tech/lrud": "^8.0.2",
-    "@react-native-tvos/config-tv": "^0.0.4",
-    "@react-navigation/bottom-tabs": "^6.5.11",
     "lodash": "^4.17.21",
-    "lodash.uniqueid": "^4.0.1",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-native-modal": "^13.0.1",
-    "react-native-web": "^0.20.0"
+    "lodash.uniqueid": "^4.0.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-native": ">=0.72.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native": {
+      "optional": true
+    }
   },
   "resolutions": {
     "@typescript-eslint/typescript-estree": "5.61.0"

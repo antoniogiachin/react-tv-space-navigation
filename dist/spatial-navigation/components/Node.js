@@ -103,7 +103,7 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({ onFocus, onBlur, onSe
     currentOnInactive.current = onInactive;
     const shouldHaveDefaultFocus = (0, DefaultFocusContext_1.useSpatialNavigatorDefaultFocus)();
     const accessedPropertiesRef = (0, react_1.useRef)(new Set());
-    (0, react_1.useEffect)(() => {
+    (0, react_1.useLayoutEffect)(() => {
         spatialNavigator.registerNode(id, {
             parent: parentId,
             isFocusable,

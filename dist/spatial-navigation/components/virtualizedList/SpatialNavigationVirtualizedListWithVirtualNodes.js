@@ -28,7 +28,7 @@ const useRegisterInitialAndUnregisterFinalVirtualNodes = ({ allItems, parentId, 
      * This means the cleanup function needs to have access to up-to-date data, so we use a reference to the list of data. */
     const currentAllItems = (0, react_1.useRef)(allItems);
     currentAllItems.current = allItems;
-    (0, react_1.useLayoutEffect)(() => {
+    (0, react_1.useEffect)(() => {
         currentAllItems.current.forEach((_, n) => registerNthVirtualNode(n));
         return () => currentAllItems.current.forEach((_, n) => unregisterNthVirtualNode(n));
         // eslint-disable-next-line react-hooks/exhaustive-deps -- unfortunately, we can't have clean effects with lrud for now
@@ -37,7 +37,7 @@ const useRegisterInitialAndUnregisterFinalVirtualNodes = ({ allItems, parentId, 
 const useUpdateRegistration = ({ allItems, registerNthVirtualNode, unregisterNthVirtualNode, }) => {
     const previousAllItems = (0, react_1.useRef)(allItems);
     // useBeforeMountEffect done every time allItems is changing to change the way the allItems is register in the spatialNavigator
-    (0, react_1.useLayoutEffect)(() => {
+    (0, react_1.useEffect)(() => {
         const previousAllItemsList = previousAllItems.current;
         const isFirstRender = previousAllItemsList === undefined;
         if (!isFirstRender) {

@@ -2587,7 +2587,7 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({
   currentOnInactive.current = onInactive;
   const shouldHaveDefaultFocus = (0, DefaultFocusContext_1.useSpatialNavigatorDefaultFocus)();
   const accessedPropertiesRef = (0, react_1.useRef)(new Set());
-  (0, react_1.useLayoutEffect)(() => {
+  (0, react_1.useEffect)(() => {
     spatialNavigator.registerNode(id, {
       parent: parentId,
       isFocusable,
@@ -2631,7 +2631,9 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({
         }
       }
     });
-    return () => spatialNavigator.unregisterNode(id);
+    return () => spatialNavigator.unregisterNode(id, {
+      forceRefocus: false
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- unfortunately, we can't have clean effects with lrud for now
   }, [parentId]);
   (0, react_1.useEffect)(() => {
@@ -3242,7 +3244,7 @@ const useRegisterInitialAndUnregisterFinalVirtualNodes = ({
    * This means the cleanup function needs to have access to up-to-date data, so we use a reference to the list of data. */
   const currentAllItems = (0, react_1.useRef)(allItems);
   currentAllItems.current = allItems;
-  (0, react_1.useLayoutEffect)(() => {
+  (0, react_1.useEffect)(() => {
     currentAllItems.current.forEach((_, n) => registerNthVirtualNode(n));
     return () => currentAllItems.current.forEach((_, n) => unregisterNthVirtualNode(n));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- unfortunately, we can't have clean effects with lrud for now
@@ -3255,7 +3257,7 @@ const useUpdateRegistration = ({
 }) => {
   const previousAllItems = (0, react_1.useRef)(allItems);
   // useBeforeMountEffect done every time allItems is changing to change the way the allItems is register in the spatialNavigator
-  (0, react_1.useLayoutEffect)(() => {
+  (0, react_1.useEffect)(() => {
     const previousAllItemsList = previousAllItems.current;
     const isFirstRender = previousAllItemsList === undefined;
     if (!isFirstRender) {

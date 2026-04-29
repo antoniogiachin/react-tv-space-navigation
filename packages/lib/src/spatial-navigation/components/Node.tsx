@@ -1,11 +1,4 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useSpatialNavigatorDefaultFocus } from '../context/DefaultFocusContext';
 import { ParentIdContext, useParentId } from '../context/ParentIdContext';
@@ -170,7 +163,7 @@ export const SpatialNavigationNode = forwardRef<SpatialNavigationNodeRef, Props>
 
     const accessedPropertiesRef = useRef<Set<keyof FocusableNodeState>>(new Set());
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       spatialNavigator.registerNode(id, {
         parent: parentId,
         isFocusable,
@@ -205,7 +198,7 @@ export const SpatialNavigationNode = forwardRef<SpatialNavigationNodeRef, Props>
         },
       });
 
-      return () => spatialNavigator.unregisterNode(id);
+      return () => spatialNavigator.unregisterNode(id, { forceRefocus: false });
       // eslint-disable-next-line react-hooks/exhaustive-deps -- unfortunately, we can't have clean effects with lrud for now
     }, [parentId]);
 

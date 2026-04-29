@@ -103,7 +103,7 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({ onFocus, onBlur, onSe
     currentOnInactive.current = onInactive;
     const shouldHaveDefaultFocus = (0, DefaultFocusContext_1.useSpatialNavigatorDefaultFocus)();
     const accessedPropertiesRef = (0, react_1.useRef)(new Set());
-    (0, react_1.useLayoutEffect)(() => {
+    (0, react_1.useEffect)(() => {
         spatialNavigator.registerNode(id, {
             parent: parentId,
             isFocusable,
@@ -141,7 +141,7 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({ onFocus, onBlur, onSe
                 }
             },
         });
-        return () => spatialNavigator.unregisterNode(id);
+        return () => spatialNavigator.unregisterNode(id, { forceRefocus: false });
         // eslint-disable-next-line react-hooks/exhaustive-deps -- unfortunately, we can't have clean effects with lrud for now
     }, [parentId]);
     (0, react_1.useEffect)(() => {

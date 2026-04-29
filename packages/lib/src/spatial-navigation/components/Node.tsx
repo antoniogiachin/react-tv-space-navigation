@@ -163,6 +163,14 @@ export const SpatialNavigationNode = forwardRef<SpatialNavigationNodeRef, Props>
 
     const accessedPropertiesRef = useRef<Set<keyof FocusableNodeState>>(new Set());
 
+    const isMountedRef = useRef(true);
+    useEffect(() => {
+      isMountedRef.current = true;
+      return () => {
+        isMountedRef.current = false;
+      };
+    }, []);
+
     useEffect(() => {
       spatialNavigator.registerNode(id, {
         parent: parentId,
@@ -198,7 +206,8 @@ export const SpatialNavigationNode = forwardRef<SpatialNavigationNodeRef, Props>
         },
       });
 
-      return () => spatialNavigator.unregisterNode(id, { forceRefocus: false });
+      return () =>
+        spatialNavigator.unregisterNode(id, { forceRefocus: !isMountedRef.current });
       // eslint-disable-next-line react-hooks/exhaustive-deps -- unfortunately, we can't have clean effects with lrud for now
     }, [parentId]);
 

@@ -2587,6 +2587,13 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({
   currentOnInactive.current = onInactive;
   const shouldHaveDefaultFocus = (0, DefaultFocusContext_1.useSpatialNavigatorDefaultFocus)();
   const accessedPropertiesRef = (0, react_1.useRef)(new Set());
+  const isMountedRef = (0, react_1.useRef)(true);
+  (0, react_1.useEffect)(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
   (0, react_1.useEffect)(() => {
     spatialNavigator.registerNode(id, {
       parent: parentId,
@@ -2631,8 +2638,10 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({
         }
       }
     });
+    // When parentId changes (recycling), the component is still mounted — skip refocus
+    // to prevent the cascade. On true unmount, allow refocus so focus moves to a sibling.
     return () => spatialNavigator.unregisterNode(id, {
-      forceRefocus: false
+      forceRefocus: !isMountedRef.current
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- unfortunately, we can't have clean effects with lrud for now
   }, [parentId]);

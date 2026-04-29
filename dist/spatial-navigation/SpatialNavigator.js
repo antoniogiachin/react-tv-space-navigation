@@ -14,6 +14,7 @@ const isError_1 = require("./helpers/isError");
 class SpatialNavigator {
     constructor({ onDirectionHandledWithoutMovementRef = { current: () => undefined }, }) {
         this.registerMap = {};
+        this.focusRecoveryScheduled = false;
         /**
          * Sometimes we need to focus an element, but it is not registered yet.
          * That's where we put this waiting element.
@@ -142,8 +143,23 @@ class SpatialNavigator {
             console.error(e);
         }
     }
-    unregisterNode(...params) {
-        this.lrud.unregisterNode(...params);
+    unregisterNode(nodeId) {
+        this.lrud.unregisterNode(nodeId, { forceRefocus: false });
+        if (!this.lrud.currentFocusNode && !this.focusRecoveryScheduled) {
+            this.focusRecoveryScheduled = true;
+            queueMicrotask(() => {
+                this.focusRecoveryScheduled = false;
+                if (!this.lrud.currentFocusNode) {
+                    try {
+                        const root = this.lrud.getRootNode();
+                        this.lrud.assignFocus(root);
+                    }
+                    catch (e) {
+                        // pass
+                    }
+                }
+            });
+        }
     }
     handleKeyDown(direction) {
         return __awaiter(this, void 0, void 0, function* () {

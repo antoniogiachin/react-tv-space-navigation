@@ -56,8 +56,25 @@ export default class SpatialNavigator {
     }
   }
 
-  public unregisterNode(...params: Parameters<Lrud['unregisterNode']>) {
-    this.lrud.unregisterNode(...params);
+  private focusRecoveryScheduled = false;
+
+  public unregisterNode(nodeId: string) {
+    this.lrud.unregisterNode(nodeId, { forceRefocus: false });
+
+    if (!this.lrud.currentFocusNode && !this.focusRecoveryScheduled) {
+      this.focusRecoveryScheduled = true;
+      queueMicrotask(() => {
+        this.focusRecoveryScheduled = false;
+        if (!this.lrud.currentFocusNode) {
+          try {
+            const root = this.lrud.getRootNode();
+            this.lrud.assignFocus(root);
+          } catch (e) {
+            // pass
+          }
+        }
+      });
+    }
   }
 
   public async handleKeyDown(direction: Direction | null) {

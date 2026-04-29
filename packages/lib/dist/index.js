@@ -796,6 +796,7 @@ class SpatialNavigator {
     }
   }) {
     this.registerMap = {};
+    this.focusRecoveryScheduled = false;
     /**
      * Sometimes we need to focus an element, but it is not registered yet.
      * That's where we put this waiting element.
@@ -915,8 +916,24 @@ class SpatialNavigator {
       console.error(e);
     }
   }
-  unregisterNode(...params) {
-    this.lrud.unregisterNode(...params);
+  unregisterNode(nodeId) {
+    this.lrud.unregisterNode(nodeId, {
+      forceRefocus: false
+    });
+    if (!this.lrud.currentFocusNode && !this.focusRecoveryScheduled) {
+      this.focusRecoveryScheduled = true;
+      queueMicrotask(() => {
+        this.focusRecoveryScheduled = false;
+        if (!this.lrud.currentFocusNode) {
+          try {
+            const root = this.lrud.getRootNode();
+            this.lrud.assignFocus(root);
+          } catch (e) {
+            // pass
+          }
+        }
+      });
+    }
   }
   handleKeyDown(direction) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -2587,13 +2604,6 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({
   currentOnInactive.current = onInactive;
   const shouldHaveDefaultFocus = (0, DefaultFocusContext_1.useSpatialNavigatorDefaultFocus)();
   const accessedPropertiesRef = (0, react_1.useRef)(new Set());
-  const isMountedRef = (0, react_1.useRef)(true);
-  (0, react_1.useEffect)(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
   (0, react_1.useEffect)(() => {
     spatialNavigator.registerNode(id, {
       parent: parentId,
@@ -2638,9 +2648,7 @@ exports.SpatialNavigationNode = (0, react_1.forwardRef)(({
         }
       }
     });
-    return () => spatialNavigator.unregisterNode(id, {
-      forceRefocus: !isMountedRef.current
-    });
+    return () => spatialNavigator.unregisterNode(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- unfortunately, we can't have clean effects with lrud for now
   }, [parentId]);
   (0, react_1.useEffect)(() => {

@@ -1,5 +1,5 @@
 import uniqueId from 'lodash.uniqueid';
-import { useCallback, useEffect, useImperativeHandle, useRef } from 'react';
+import { useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import { VirtualizedListProps } from './VirtualizedList';
 import { useSpatialNavigator } from '../../context/SpatialNavigatorContext';
 import { ParentIdContext, useParentId } from '../../context/ParentIdContext';
@@ -37,7 +37,7 @@ const useRegisterInitialAndUnregisterFinalVirtualNodes = <T,>({
   const currentAllItems = useRef<Array<T>>(allItems);
   currentAllItems.current = allItems;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     currentAllItems.current.forEach((_, n) => registerNthVirtualNode(n));
 
     return () => currentAllItems.current.forEach((_, n) => unregisterNthVirtualNode(n));
@@ -57,7 +57,7 @@ const useUpdateRegistration = <T,>({
   const previousAllItems = useRef<Array<T>>(allItems);
 
   // useBeforeMountEffect done every time allItems is changing to change the way the allItems is register in the spatialNavigator
-  useEffect(() => {
+  useLayoutEffect(() => {
     const previousAllItemsList = previousAllItems.current;
     const isFirstRender = previousAllItemsList === undefined;
     if (!isFirstRender) {

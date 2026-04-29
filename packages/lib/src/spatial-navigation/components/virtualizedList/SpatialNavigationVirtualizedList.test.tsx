@@ -652,6 +652,123 @@ describe('SpatialNavigationVirtualizedList', () => {
     expectButtonToHaveFocus(component, 'button 1');
   });
 
+  it('handles correctly LEFT navigation after multiple RIGHT presses', async () => {
+    const component = renderList();
+    act(() => jest.runAllTimers());
+
+    setComponentLayoutSize(listTestId, component, { width: 300, height: 300 });
+
+    const listElement = await component.findByTestId(listTestId);
+
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    expectButtonToHaveFocus(component, 'button 4');
+    expectListToHaveScroll(listElement, -300);
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 3');
+    expectListToHaveScroll(listElement, -200);
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 2');
+    expectListToHaveScroll(listElement, -100);
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 1');
+    expectListToHaveScroll(listElement, 0);
+  });
+
+  it('handles LEFT navigation after scrolling far right', async () => {
+    const component = renderList();
+    act(() => jest.runAllTimers());
+
+    setComponentLayoutSize(listTestId, component, { width: 300, height: 300 });
+
+    const listElement = await component.findByTestId(listTestId);
+
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    expectButtonToHaveFocus(component, 'button 6');
+    expectListToHaveScroll(listElement, -500);
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 5');
+    expectListToHaveScroll(listElement, -400);
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 4');
+    expectListToHaveScroll(listElement, -300);
+  });
+
+  it('handles LEFT on stick-to-end scroll', async () => {
+    const component = render(
+      <SpatialNavigationRoot>
+        <DefaultFocus>
+          <SpatialNavigationVirtualizedList
+            testID={listTestId}
+            renderItem={renderItem}
+            data={data}
+            itemSize={100}
+            scrollBehavior="stick-to-end"
+          />
+        </DefaultFocus>
+      </SpatialNavigationRoot>,
+    );
+    act(() => jest.runAllTimers());
+
+    setComponentLayoutSize(listTestId, component, { width: 300, height: 300 });
+
+    const listElement = await component.findByTestId(listTestId);
+
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    expectButtonToHaveFocus(component, 'button 5');
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 4');
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 3');
+  });
+
+  it('handles LEFT on jump-on-scroll', async () => {
+    const component = render(
+      <SpatialNavigationRoot>
+        <DefaultFocus>
+          <SpatialNavigationVirtualizedList
+            testID={listTestId}
+            renderItem={renderItem}
+            data={data}
+            itemSize={100}
+            scrollBehavior="jump-on-scroll"
+            additionalItemsRendered={0}
+          />
+        </DefaultFocus>
+      </SpatialNavigationRoot>,
+    );
+    act(() => jest.runAllTimers());
+
+    setComponentLayoutSize(listTestId, component, { width: 300, height: 300 });
+
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    testRemoteControlManager.handleRight();
+    expectButtonToHaveFocus(component, 'button 5');
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 4');
+
+    testRemoteControlManager.handleLeft();
+    expectButtonToHaveFocus(component, 'button 3');
+  });
+
   it('scroll to index in the list, without applying focus', async () => {
     const component = renderVirtualizedListWithNavigationButtons(10);
     act(() => jest.runAllTimers());

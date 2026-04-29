@@ -1,4 +1,11 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { View } from 'react-native';
 import { useSpatialNavigatorDefaultFocus } from '../context/DefaultFocusContext';
 import { ParentIdContext, useParentId } from '../context/ParentIdContext';
@@ -163,7 +170,7 @@ export const SpatialNavigationNode = forwardRef<SpatialNavigationNodeRef, Props>
 
     const accessedPropertiesRef = useRef<Set<keyof FocusableNodeState>>(new Set());
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       spatialNavigator.registerNode(id, {
         parent: parentId,
         isFocusable,

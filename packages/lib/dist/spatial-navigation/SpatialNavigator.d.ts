@@ -12,7 +12,8 @@ export default class SpatialNavigator {
     constructor({ onDirectionHandledWithoutMovementRef, }: SpatialNavigatorParams);
     private registerMap;
     registerNode(...params: Parameters<Lrud['registerNode']>): void;
-    unregisterNode(...params: Parameters<Lrud['unregisterNode']>): void;
+    private focusRecoveryScheduled;
+    unregisterNode(nodeId: string): void;
     handleKeyDown(direction: Direction | null): Promise<void>;
     hasOneNodeFocused(): boolean;
     /**
